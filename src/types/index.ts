@@ -6,8 +6,11 @@ export interface User {
   avatar?: string;
 }
 
+<<<<<<< HEAD
 export type ValidationStatus = 'pending' | 'approved' | 'rejected';
 
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 export interface Patient {
   id: string;
   name: string;
@@ -24,7 +27,11 @@ export interface Diagnosis {
   code: string;
   description: string;
   codeSystem: 'ICD-11' | 'NAMASTE';
+<<<<<<< HEAD
   status: ValidationStatus;
+=======
+  isValid: boolean;
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   validationDate: string;
   validatedBy: string;
   suggestions?: string[];
@@ -35,7 +42,11 @@ export interface Treatment {
   code: string;
   description: string;
   codeSystem: 'ICD-11' | 'NAMASTE';
+<<<<<<< HEAD
   status: ValidationStatus;
+=======
+  isValid: boolean;
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   validationDate: string;
   validatedBy: string;
   suggestions?: string[];

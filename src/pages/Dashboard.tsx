@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 import { Link } from 'react-router-dom';
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 import { 
   Plus, 
   Search, 
@@ -8,6 +11,7 @@ import {
   Users, 
   CheckCircle, 
   XCircle, 
+<<<<<<< HEAD
   Clock,
   Calendar
 } from 'lucide-react';
@@ -16,10 +20,22 @@ import { Patient } from '../types';
 import StatusBadge from '../components/Common/StatusBadge';
 import { format } from 'date-fns';
 import AddPatientModal from '../components/Dashboard/AddPatientModal';
+=======
+  AlertTriangle,
+  Calendar,
+  TrendingUp,
+  Clock
+} from 'lucide-react';
+import { mockPatients } from '../data/mockData';
+import { Patient } from '../types';
+import ValidationBadge from '../components/Common/ValidationBadge';
+import { format } from 'date-fns';
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
 const Dashboard: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
+<<<<<<< HEAD
   const [statusFilter, setStatusFilter] = useState('all');
   const [codeSystemFilter, setCodeSystemFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
@@ -106,6 +122,36 @@ const Dashboard: React.FC = () => {
     pendingCodes: patients.reduce((acc, patient) => 
       acc + patient.diagnoses.filter(d => d.status === 'pending').length + 
       patient.treatments.filter(t => t.status === 'pending').length, 0)
+=======
+  const [filterRole, setFilterRole] = useState('all');
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate API call
+    setTimeout(() => {
+      setPatients(mockPatients);
+      setIsLoading(false);
+    }, 1000);
+  }, []);
+
+  const filteredPatients = patients.filter(patient => {
+    const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         patient.patientId.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesSearch;
+  });
+
+  const stats = {
+    totalPatients: patients.length,
+    validCodes: patients.reduce((acc, patient) => 
+      acc + patient.diagnoses.filter(d => d.isValid).length + 
+      patient.treatments.filter(t => t.isValid).length, 0),
+    invalidCodes: patients.reduce((acc, patient) => 
+      acc + patient.diagnoses.filter(d => !d.isValid).length + 
+      patient.treatments.filter(t => !t.isValid).length, 0),
+    recentValidations: patients.filter(patient => 
+      new Date(patient.lastVisit) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    ).length
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   };
 
   return (
@@ -117,9 +163,13 @@ const Dashboard: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-gray-600 mt-2">Monitor and validate medical codes across your patients</p>
           </div>
+<<<<<<< HEAD
           <button 
             onClick={() => setIsModalOpen(true)}
             className="mt-4 lg:mt-0 bg-medical-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-medical-blue-700 transition-colors flex items-center space-x-2">
+=======
+          <button className="mt-4 lg:mt-0 bg-medical-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-medical-blue-700 transition-colors flex items-center space-x-2">
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
             <Plus className="h-5 w-5" />
             <span>Add New Patient</span>
           </button>
@@ -152,8 +202,13 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
+<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Approved Codes</p>
                 <p className="text-3xl font-bold text-medical-green-600">{stats.approvedCodes}</p>
+=======
+                <p className="text-gray-500 text-sm">Valid Codes</p>
+                <p className="text-3xl font-bold text-medical-green-600">{stats.validCodes}</p>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
               <div className="w-12 h-12 bg-medical-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="h-6 w-6 text-medical-green-600" />
@@ -169,8 +224,13 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
+<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Rejected Codes</p>
                 <p className="text-3xl font-bold text-red-500">{stats.rejectedCodes}</p>
+=======
+                <p className="text-gray-500 text-sm">Invalid Codes</p>
+                <p className="text-3xl font-bold text-red-500">{stats.invalidCodes}</p>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                 <XCircle className="h-6 w-6 text-red-500" />
@@ -186,11 +246,19 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
+<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Pending Review</p>
                 <p className="text-3xl font-bold text-orange-500">{stats.pendingCodes}</p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <Clock className="h-6 w-6 text-orange-600" />
+=======
+                <p className="text-gray-500 text-sm">This Week</p>
+                <p className="text-3xl font-bold text-blue-600">{stats.recentValidations}</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-blue-600" />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
             </div>
           </motion.div>
@@ -209,6 +277,7 @@ const Dashboard: React.FC = () => {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-blue-500 focus:border-transparent"
               />
             </div>
+<<<<<<< HEAD
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -263,6 +332,13 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           )}
+=======
+            <button className="flex items-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <Filter className="h-5 w-5 text-gray-400" />
+              <span>Filters</span>
+            </button>
+          </div>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
         </div>
 
         {/* Patients Table */}
@@ -318,7 +394,15 @@ const Dashboard: React.FC = () => {
                         <div className="space-y-1">
                           {patient.diagnoses.slice(0, 2).map((diagnosis) => (
                             <div key={diagnosis.id} className="flex items-center space-x-2">
+<<<<<<< HEAD
                               <StatusBadge status={diagnosis.status} />
+=======
+                              <ValidationBadge 
+                                isValid={diagnosis.isValid} 
+                                codeSystem={diagnosis.codeSystem}
+                                showTooltip={false}
+                              />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                               <span className="text-sm text-gray-600 truncate">
                                 {diagnosis.code}
                               </span>
@@ -335,7 +419,15 @@ const Dashboard: React.FC = () => {
                         <div className="space-y-1">
                           {patient.treatments.slice(0, 2).map((treatment) => (
                             <div key={treatment.id} className="flex items-center space-x-2">
+<<<<<<< HEAD
                               <StatusBadge status={treatment.status} />
+=======
+                              <ValidationBadge 
+                                isValid={treatment.isValid} 
+                                codeSystem={treatment.codeSystem}
+                                showTooltip={false}
+                              />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                               <span className="text-sm text-gray-600 truncate">
                                 {treatment.code}
                               </span>
@@ -352,14 +444,24 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4 text-gray-400" />
                           <span className="text-sm text-gray-500">
+<<<<<<< HEAD
                           {patient.lastVisit ? (isNaN(new Date(patient.lastVisit).getTime()) ? 'N/A' : format(new Date(patient.lastVisit), 'MMM dd, yyyy')) : 'N/A'}
+=======
+                            {format(new Date(patient.lastVisit), 'MMM dd, yyyy')}
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<<<<<<< HEAD
                         <Link to={`/patient/${patient.id}`} className="text-medical-blue-600 hover:text-medical-blue-700">
                           View Details
                         </Link>
+=======
+                        <button className="text-medical-blue-600 hover:text-medical-blue-700">
+                          View Details
+                        </button>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                       </td>
                     </motion.tr>
                   ))}
@@ -369,11 +471,14 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       </div>
+<<<<<<< HEAD
       <AddPatientModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddPatient}
       />
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     </div>
   );
 };

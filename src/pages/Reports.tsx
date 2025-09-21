@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 import {
   Download,
   Calendar,
@@ -23,12 +24,27 @@ interface MockReport {
   size: string;
   format: 'PDF' | 'Excel' | 'JSON';
 }
+=======
+import { 
+  Download, 
+  Calendar, 
+  FileText, 
+  Filter,
+  BarChart3,
+  PieChart,
+  TrendingUp,
+  CheckCircle
+} from 'lucide-react';
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
 const Reports: React.FC = () => {
   const [dateRange, setDateRange] = useState('last30days');
   const [reportType, setReportType] = useState('validation');
   const [codeSystem, setCodeSystem] = useState('all');
+<<<<<<< HEAD
   const [isGenerating, setIsGenerating] = useState(false);
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
   const reportTypes = [
     { value: 'validation', label: 'Validation Summary' },
@@ -58,7 +74,11 @@ const Reports: React.FC = () => {
     { format: 'json', label: 'JSON', icon: PieChart, color: 'bg-blue-500' }
   ];
 
+<<<<<<< HEAD
   const initialReports: MockReport[] = [
+=======
+  const mockReports = [
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     {
       id: 1,
       name: 'Monthly Validation Report - January 2025',
@@ -75,6 +95,7 @@ const Reports: React.FC = () => {
       size: '1.8 MB',
       format: 'Excel'
     },
+<<<<<<< HEAD
   ];
 
   const [reports, setReports] = useState<MockReport[]>(initialReports);
@@ -173,6 +194,30 @@ const Reports: React.FC = () => {
       a.click();
       URL.revokeObjectURL(url);
     }
+=======
+    {
+      id: 3,
+      name: 'EHR Compliance Audit Q4 2024',
+      type: 'EHR Compliance',
+      generated: '2025-01-05',
+      size: '3.2 MB',
+      format: 'PDF'
+    },
+    {
+      id: 4,
+      name: 'Patient Records Export',
+      type: 'Patient Records',
+      generated: '2025-01-03',
+      size: '5.1 MB',
+      format: 'JSON'
+    }
+  ];
+
+  const handleExport = (format: string) => {
+    // Mock export functionality
+    console.log(`Exporting report as ${format}`);
+    // In a real app, this would trigger the actual export
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   };
 
   return (
@@ -187,7 +232,11 @@ const Reports: React.FC = () => {
         {/* Report Generation */}
         <div className="bg-white rounded-xl shadow-sm p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-6">Generate New Report</h2>
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -266,6 +315,7 @@ const Reports: React.FC = () => {
           </div>
 
           <div className="flex items-center space-x-4">
+<<<<<<< HEAD
             <button
               onClick={handleGenerateReport}
               disabled={isGenerating}
@@ -282,6 +332,11 @@ const Reports: React.FC = () => {
                   <span>Generate Report</span>
                 </>
               )}
+=======
+            <button className="bg-medical-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-medical-blue-700 transition-colors flex items-center space-x-2">
+              <BarChart3 className="h-5 w-5" />
+              <span>Generate Report</span>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
             </button>
             <button className="border border-gray-300 text-gray-700 px-6 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors flex items-center space-x-2">
               <Filter className="h-5 w-5" />
@@ -295,7 +350,11 @@ const Reports: React.FC = () => {
           <div className="px-6 py-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-gray-900">Recent Reports</h2>
           </div>
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-gray-50">
@@ -321,7 +380,11 @@ const Reports: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
+<<<<<<< HEAD
                 {reports.map((report) => (
+=======
+                {mockReports.map((report) => (
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                   <motion.tr
                     key={report.id}
                     initial={{ opacity: 0 }}
@@ -362,9 +425,13 @@ const Reports: React.FC = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+<<<<<<< HEAD
                       <button
                         onClick={() => handleExport(report.format.toLowerCase())}
                         className="text-medical-blue-600 hover:text-medical-blue-700 mr-4">
+=======
+                      <button className="text-medical-blue-600 hover:text-medical-blue-700 mr-4">
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                         Download
                       </button>
                       <button className="text-gray-600 hover:text-gray-700">
@@ -377,6 +444,65 @@ const Reports: React.FC = () => {
             </table>
           </div>
         </div>
+<<<<<<< HEAD
+=======
+
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-6 rounded-xl shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Reports Generated</p>
+                <p className="text-2xl font-bold text-gray-900">47</p>
+                <p className="text-medical-green-600 text-sm">↑ 12% this month</p>
+              </div>
+              <div className="w-12 h-12 bg-medical-blue-100 rounded-lg flex items-center justify-center">
+                <FileText className="h-6 w-6 text-medical-blue-600" />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white p-6 rounded-xl shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Data Exported</p>
+                <p className="text-2xl font-bold text-gray-900">284 MB</p>
+                <p className="text-medical-green-600 text-sm">↑ 8% this month</p>
+              </div>
+              <div className="w-12 h-12 bg-medical-green-100 rounded-lg flex items-center justify-center">
+                <Download className="h-6 w-6 text-medical-green-600" />
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white p-6 rounded-xl shadow-sm"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-gray-500 text-sm">Avg. Generation Time</p>
+                <p className="text-2xl font-bold text-gray-900">23s</p>
+                <p className="text-medical-green-600 text-sm">↓ 15% faster</p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <TrendingUp className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
       </div>
     </div>
   );

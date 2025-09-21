@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
@@ -100,11 +101,25 @@ const Analytics: React.FC = () => {
 
     return { codeUsage, validationAccuracy, validationTrends, allCodes };
   }, [dateRange]);
+=======
+import React from 'react';
+import { motion } from 'framer-motion';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
+import { generateAnalyticsData } from '../data/mockData';
+import { TrendingUp, TrendingDown, Activity, Users, CheckCircle, AlertTriangle } from 'lucide-react';
+
+const Analytics: React.FC = () => {
+  const data = generateAnalyticsData();
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
   const overviewStats = [
     {
       title: 'Total Validations',
+<<<<<<< HEAD
       value: analyticsData.allCodes.length.toLocaleString(),
+=======
+      value: '12,847',
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
       change: '+12.5%',
       trend: 'up',
       icon: Activity,
@@ -120,7 +135,11 @@ const Analytics: React.FC = () => {
     },
     {
       title: 'Accuracy Rate',
+<<<<<<< HEAD
       value: analyticsData.allCodes.length > 0 ? `${((analyticsData.validationAccuracy[0].count / analyticsData.allCodes.length) * 100).toFixed(1)}%` : '0.0%',
+=======
+      value: '94.8%',
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
       change: '+2.1%',
       trend: 'up',
       icon: CheckCircle,
@@ -128,7 +147,11 @@ const Analytics: React.FC = () => {
     },
     {
       title: 'Pending Reviews',
+<<<<<<< HEAD
       value: analyticsData.validationAccuracy[2].count,
+=======
+      value: '127',
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
       change: '-15.3%',
       trend: 'down',
       icon: AlertTriangle,
@@ -136,17 +159,22 @@ const Analytics: React.FC = () => {
     }
   ];
 
+<<<<<<< HEAD
   const dateRanges: { value: DateRange; label: string }[] = [
     { value: 'last7days', label: 'Last 7 Days' },
     { value: 'last30days', label: 'Last 30 Days' },
     { value: 'last3months', label: 'Last 3 Months' },
     { value: 'last6months', label: 'Last 6 Months' },
   ];
+=======
+  const COLORS = ['#3b82f6', '#22c55e', '#f59e0b', '#ef4444'];
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
+<<<<<<< HEAD
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
@@ -165,6 +193,11 @@ const Analytics: React.FC = () => {
               ))}
             </select>
           </div>
+=======
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900">Analytics</h1>
+          <p className="text-gray-600 mt-2">Visualize code usage trends and validation metrics</p>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
         </div>
 
         {/* Overview Stats */}
@@ -219,9 +252,15 @@ const Analytics: React.FC = () => {
           >
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Validation Trends</h3>
             <ResponsiveContainer width="100%" height={300}>
+<<<<<<< HEAD
               <LineChart data={analyticsData.validationTrends}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="label" />
+=======
+              <LineChart data={data.validationTrends}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                 <YAxis />
                 <Tooltip />
                 <Line 
@@ -253,7 +292,11 @@ const Analytics: React.FC = () => {
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
                 <Pie
+<<<<<<< HEAD
                   data={analyticsData.codeUsage}
+=======
+                  data={data.codeUsage}
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                   cx="50%"
                   cy="50%"
                   labelLine={false}
@@ -262,7 +305,11 @@ const Analytics: React.FC = () => {
                   fill="#8884d8"
                   dataKey="value"
                 >
+<<<<<<< HEAD
                   {analyticsData.codeUsage.map((entry, index) => (
+=======
+                  {data.codeUsage.map((entry, index) => (
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
@@ -283,16 +330,24 @@ const Analytics: React.FC = () => {
           >
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Validation Accuracy</h3>
             <ResponsiveContainer width="100%" height={300}>
+<<<<<<< HEAD
               <BarChart data={analyticsData.validationAccuracy}>
+=======
+              <BarChart data={data.validationAccuracy}>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="category" />
                 <YAxis />
                 <Tooltip />
+<<<<<<< HEAD
                 <Bar dataKey="count">
                   {analyticsData.validationAccuracy.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Bar>
+=======
+                <Bar dataKey="count" fill="#3b82f6" />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
@@ -304,6 +359,7 @@ const Analytics: React.FC = () => {
             transition={{ duration: 0.5, delay: 0.5 }}
             className="bg-white p-6 rounded-xl shadow-sm"
           >
+<<<<<<< HEAD
             <h3 className="text-lg font-semibold text-gray-900 mb-4">Validation Volume</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={analyticsData.validationTrends}>
@@ -312,10 +368,64 @@ const Analytics: React.FC = () => {
                 <YAxis />
                 <Tooltip />
                 <Bar dataKey="total" fill="#22c55e" name="Total Validations" />
+=======
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Validation Volume</h3>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={data.validationTrends}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="total" fill="#22c55e" />
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </BarChart>
             </ResponsiveContainer>
           </motion.div>
         </div>
+<<<<<<< HEAD
+=======
+
+        {/* Key Insights */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.6 }}
+          className="bg-white p-6 rounded-xl shadow-sm mt-8"
+        >
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Key Insights</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="p-4 bg-medical-blue-50 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <TrendingUp className="h-5 w-5 text-medical-blue-600" />
+                <span className="font-medium text-medical-blue-900">ICD-11 Adoption</span>
+              </div>
+              <p className="text-sm text-medical-blue-700">
+                ICD-11 code usage has increased by 23% this quarter, showing strong adoption across healthcare facilities.
+              </p>
+            </div>
+
+            <div className="p-4 bg-medical-green-50 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <CheckCircle className="h-5 w-5 text-medical-green-600" />
+                <span className="font-medium text-medical-green-900">Validation Accuracy</span>
+              </div>
+              <p className="text-sm text-medical-green-700">
+                Overall validation accuracy has improved to 94.8%, exceeding our target of 90% for clinical coding standards.
+              </p>
+            </div>
+
+            <div className="p-4 bg-orange-50 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <AlertTriangle className="h-5 w-5 text-orange-600" />
+                <span className="font-medium text-orange-900">NAMASTE Integration</span>
+              </div>
+              <p className="text-sm text-orange-700">
+                NAMASTE code validation requires attention, with 15% of submissions needing manual review for Ayush treatments.
+              </p>
+            </div>
+          </div>
+        </motion.div>
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
       </div>
     </div>
   );

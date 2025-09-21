@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+<<<<<<< HEAD
 import {
   Users,
   Settings,
   Shield,
+=======
+import { 
+  Users, 
+  Settings, 
+  Shield, 
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   Database,
   Plus,
   Search,
@@ -12,8 +19,12 @@ import {
   Edit3,
   Trash2,
   Eye,
+<<<<<<< HEAD
   UserPlus,
   CheckCircle
+=======
+  UserPlus
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 } from 'lucide-react';
 import { generateMockPatients } from '../data/mockData';
 
@@ -23,7 +34,10 @@ const Admin: React.FC = () => {
 
   const tabs = [
     { id: 'users', label: 'User Management', icon: Users },
+<<<<<<< HEAD
     { id: 'treatments', label: 'Treatment Approval', icon: CheckCircle },
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     { id: 'roles', label: 'Roles & Permissions', icon: Shield },
     { id: 'datasets', label: 'Code Datasets', icon: Database },
     { id: 'system', label: 'System Settings', icon: Settings }
@@ -292,6 +306,7 @@ const Admin: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           {activeTab === 'users' && renderUserManagement()}
+<<<<<<< HEAD
           {activeTab === 'treatments' && (
             <div className="bg-white rounded-xl shadow-sm p-8 text-center">
               <CheckCircle className="h-16 w-16 text-medical-blue-600 mx-auto mb-4" />
@@ -306,6 +321,8 @@ const Admin: React.FC = () => {
               </a>
             </div>
           )}
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
           {activeTab === 'system' && renderSystemSettings()}
           {activeTab === 'roles' && (
             <div className="bg-white rounded-xl shadow-sm p-8 text-center">

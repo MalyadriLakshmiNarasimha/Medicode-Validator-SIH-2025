@@ -7,6 +7,7 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+<<<<<<< HEAD
 
   server: {
     watch: {
@@ -14,4 +15,6 @@ export default defineConfig({
       ignored: ['**/backend/venv/**']
     }
   }
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 });

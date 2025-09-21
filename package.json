@@ -14,8 +14,11 @@
     "axios": "^1.9.0",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.23.13",
+<<<<<<< HEAD
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
+=======
+>>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     "lucide-react": "^0.544.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
