@@ -1,16 +1,9 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-<<<<<<< HEAD
 import {
   Users,
   Settings,
   Shield,
-=======
-import { 
-  Users, 
-  Settings, 
-  Shield, 
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   Database,
   Plus,
   Search,
@@ -19,12 +12,8 @@ import {
   Edit3,
   Trash2,
   Eye,
-<<<<<<< HEAD
   UserPlus,
   CheckCircle
-=======
-  UserPlus
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 } from 'lucide-react';
 import { generateMockPatients } from '../data/mockData';
 
@@ -34,10 +23,7 @@ const Admin: React.FC = () => {
 
   const tabs = [
     { id: 'users', label: 'User Management', icon: Users },
-<<<<<<< HEAD
     { id: 'treatments', label: 'Treatment Approval', icon: CheckCircle },
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     { id: 'roles', label: 'Roles & Permissions', icon: Shield },
     { id: 'datasets', label: 'Code Datasets', icon: Database },
     { id: 'system', label: 'System Settings', icon: Settings }
@@ -151,24 +137,12 @@ const Admin: React.FC = () => {
           <table className="w-full">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Role
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Organization
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Validations
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Organization</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Validations</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -197,9 +171,7 @@ const Admin: React.FC = () => {
                       {user.role}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {user.organization}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.organization}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 text-xs font-medium rounded-full ${
                       user.status === 'Active' ? 'bg-medical-green-100 text-medical-green-800' : 'bg-red-100 text-red-800'
@@ -207,20 +179,12 @@ const Admin: React.FC = () => {
                       {user.status}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {user.validations.toLocaleString()}
-                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.validations.toLocaleString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center space-x-2">
-                      <button className="text-medical-blue-600 hover:text-medical-blue-700">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button className="text-gray-600 hover:text-gray-700">
-                        <Edit3 className="h-4 w-4" />
-                      </button>
-                      <button className="text-red-600 hover:text-red-700">
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                      <button className="text-medical-blue-600 hover:text-medical-blue-700"><Eye className="h-4 w-4" /></button>
+                      <button className="text-gray-600 hover:text-gray-700"><Edit3 className="h-4 w-4" /></button>
+                      <button className="text-red-600 hover:text-red-700"><Trash2 className="h-4 w-4" /></button>
                     </div>
                   </td>
                 </tr>
@@ -234,7 +198,7 @@ const Admin: React.FC = () => {
 
   const renderSystemSettings = () => (
     <div className="space-y-6">
-      {systemSettings.map((category, categoryIndex) => (
+      {systemSettings.map((category) => (
         <div key={category.category} className="bg-white rounded-xl shadow-sm p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">{category.category}</h3>
           <div className="space-y-4">
@@ -246,16 +210,8 @@ const Admin: React.FC = () => {
                 </div>
                 <div className="ml-4">
                   {typeof setting.value === 'boolean' ? (
-                    <button
-                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        setting.value ? 'bg-medical-blue-600' : 'bg-gray-200'
-                      }`}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          setting.value ? 'translate-x-6' : 'translate-x-1'
-                        }`}
-                      />
+                    <button className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${setting.value ? 'bg-medical-blue-600' : 'bg-gray-200'}`}>
+                      <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${setting.value ? 'translate-x-6' : 'translate-x-1'}`} />
                     </button>
                   ) : (
                     <span className="text-sm text-gray-900">{setting.value}</span>
@@ -306,7 +262,6 @@ const Admin: React.FC = () => {
           transition={{ duration: 0.3 }}
         >
           {activeTab === 'users' && renderUserManagement()}
-<<<<<<< HEAD
           {activeTab === 'treatments' && (
             <div className="bg-white rounded-xl shadow-sm p-8 text-center">
               <CheckCircle className="h-16 w-16 text-medical-blue-600 mx-auto mb-4" />
@@ -321,8 +276,6 @@ const Admin: React.FC = () => {
               </a>
             </div>
           )}
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
           {activeTab === 'system' && renderSystemSettings()}
           {activeTab === 'roles' && (
             <div className="bg-white rounded-xl shadow-sm p-8 text-center">

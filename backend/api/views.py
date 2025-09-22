@@ -3,8 +3,8 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
-from .models import User, Patient, Diagnosis, Treatment, Report
-from .serializers import UserSerializer, PatientSerializer, DiagnosisSerializer, TreatmentSerializer, ReportSerializer
+from .models import User, Patient, Diagnosis, Treatment, Report, MedicalCode, Notification, ValidationHistory
+from .serializers import UserSerializer, PatientSerializer, DiagnosisSerializer, TreatmentSerializer, ReportSerializer, MedicalCodeSerializer, NotificationSerializer, ValidationHistorySerializer
 from django.utils import timezone
 from django.db.models import Q
 from datetime import datetime, timedelta
@@ -26,17 +26,64 @@ class PatientViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
         data['patient'] = patient.id
         data['id'] = str(uuid.uuid4())
-        data['status'] = 'pending'
         data['validation_date'] = timezone.now()
-        data['validated_by'] = 'N/A'
+        data['validated_by'] = request.user.username if request.user.is_authenticated else 'System'
+
+        # Extract code information for validation
+        submitted_code = data.get('code')
+        submitted_code_system = data.get('code_system', 'ICD-11')
+
+        # Validate the medical code
+        is_valid, matched_code, rejection_reason = validate_medical_code(submitted_code, submitted_code_system)
+
+        # Set status based on validation
+        if is_valid:
+            data['status'] = 'approved'
+        else:
+            data['status'] = 'rejected'
+            # Add suggestions to the diagnosis
+            if rejection_reason:
+                data['suggestions'] = {'rejection_reason': rejection_reason}
 
         serializer = DiagnosisSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            diagnosis = serializer.save()
+
+            # Create validation history record
+            create_validation_history(
+                patient=patient,
+                diagnosis=diagnosis,
+                treatment=None,
+                submitted_code=submitted_code,
+                submitted_code_system=submitted_code_system,
+                validation_result=data['status'],
+                matched_code=matched_code,
+                rejection_reason=rejection_reason,
+                validated_by=data['validated_by']
+            )
+
+            # Create notification if rejected
+            if not is_valid and request.user.is_authenticated:
+                create_rejection_notification(
+                    user=request.user,
+                    patient=patient,
+                    diagnosis=diagnosis,
+                    treatment=None,
+                    rejection_reason=rejection_reason
+                )
+
             # Update last_visit
             patient.last_visit = timezone.now()
             patient.save(update_fields=['last_visit'])
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            response_data = serializer.data
+            response_data['validation_result'] = {
+                'is_valid': is_valid,
+                'rejection_reason': rejection_reason,
+                'matched_code': matched_code.code if matched_code else None
+            }
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=True, methods=['post'])
@@ -45,17 +92,64 @@ class PatientViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
         data['patient'] = patient.id
         data['id'] = str(uuid.uuid4())
-        data['status'] = 'pending'
         data['validation_date'] = timezone.now()
-        data['validated_by'] = 'N/A'
+        data['validated_by'] = request.user.username if request.user.is_authenticated else 'System'
+
+        # Extract code information for validation
+        submitted_code = data.get('code')
+        submitted_code_system = data.get('code_system', 'CPT')
+
+        # Validate the medical code
+        is_valid, matched_code, rejection_reason = validate_medical_code(submitted_code, submitted_code_system)
+
+        # Set status based on validation
+        if is_valid:
+            data['status'] = 'approved'
+        else:
+            data['status'] = 'rejected'
+            # Add suggestions to the treatment
+            if rejection_reason:
+                data['suggestions'] = {'rejection_reason': rejection_reason}
 
         serializer = TreatmentSerializer(data=data)
         if serializer.is_valid():
-            serializer.save()
+            treatment = serializer.save()
+
+            # Create validation history record
+            create_validation_history(
+                patient=patient,
+                diagnosis=None,
+                treatment=treatment,
+                submitted_code=submitted_code,
+                submitted_code_system=submitted_code_system,
+                validation_result=data['status'],
+                matched_code=matched_code,
+                rejection_reason=rejection_reason,
+                validated_by=data['validated_by']
+            )
+
+            # Create notification if rejected
+            if not is_valid and request.user.is_authenticated:
+                create_rejection_notification(
+                    user=request.user,
+                    patient=patient,
+                    diagnosis=None,
+                    treatment=treatment,
+                    rejection_reason=rejection_reason
+                )
+
             # Update last_visit
             patient.last_visit = timezone.now()
             patient.save(update_fields=['last_visit'])
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            response_data = serializer.data
+            response_data['validation_result'] = {
+                'is_valid': is_valid,
+                'rejection_reason': rejection_reason,
+                'matched_code': matched_code.code if matched_code else None
+            }
+
+            return Response(response_data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['get'])
@@ -250,3 +344,135 @@ class ReportViewSet(viewsets.ModelViewSet):
 
     def generate_audit_report(self, patients):
         return {'message': 'Audit report generation not implemented yet'}
+
+# ---------------- Helper Functions ----------------
+def validate_medical_code(code, code_system):
+    """
+    Validate a medical code against the master dataset
+    Returns: (is_valid, matched_code, rejection_reason)
+    """
+    try:
+        # Check if code exists in master dataset
+        matched_code = MedicalCode.objects.filter(
+            code=code,
+            code_system=code_system,
+            is_active=True
+        ).first()
+
+        if matched_code:
+            return True, matched_code, None
+        else:
+            # Code not found - provide suggestions
+            suggestions = MedicalCode.objects.filter(
+                code_system=code_system,
+                is_active=True
+            ).filter(
+                Q(code__icontains=code[:3]) |  # Similar codes
+                Q(description__icontains=code)  # Similar descriptions
+            )[:5]
+
+            suggestion_text = "Code not found in master dataset."
+            if suggestions:
+                suggestion_codes = [s.code for s in suggestions]
+                suggestion_text += f" Did you mean: {', '.join(suggestion_codes)}?"
+
+            return False, None, suggestion_text
+
+    except Exception as e:
+        return False, None, f"Validation error: {str(e)}"
+
+def create_validation_history(patient, diagnosis, treatment, submitted_code, submitted_code_system, validation_result, matched_code, rejection_reason, validated_by):
+    """Create a validation history record"""
+    ValidationHistory.objects.create(
+        patient=patient,
+        diagnosis=diagnosis,
+        treatment=treatment,
+        submitted_code=submitted_code,
+        submitted_code_system=submitted_code_system,
+        validation_result=validation_result,
+        matched_master_code=matched_code,
+        rejection_reason=rejection_reason,
+        validated_by=validated_by
+    )
+
+def create_rejection_notification(user, patient, diagnosis, treatment, rejection_reason):
+    """Create notification for rejected codes"""
+    title = "Medical Code Rejected"
+    message = f"Your submitted code has been automatically rejected. Reason: {rejection_reason}"
+
+    Notification.objects.create(
+        user=user,
+        notification_type='code_rejected',
+        title=title,
+        message=message,
+        related_patient=patient,
+        related_diagnosis=diagnosis,
+        related_treatment=treatment,
+        is_read=False
+    )
+
+# ---------------- MedicalCodeViewSet ----------------
+class MedicalCodeViewSet(viewsets.ModelViewSet):
+    queryset = MedicalCode.objects.all()
+    serializer_class = MedicalCodeSerializer
+
+    def get_queryset(self):
+        queryset = MedicalCode.objects.all()
+        code_system = self.request.query_params.get('code_system', None)
+        is_active = self.request.query_params.get('is_active', None)
+
+        if code_system:
+            queryset = queryset.filter(code_system=code_system)
+        if is_active is not None:
+            queryset = queryset.filter(is_active=is_active.lower() == 'true')
+
+        return queryset
+
+# ---------------- NotificationViewSet ----------------
+class NotificationViewSet(viewsets.ModelViewSet):
+    queryset = Notification.objects.all()
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        # Users can only see their own notifications
+        return Notification.objects.filter(user=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def mark_as_read(self, request, pk=None):
+        notification = self.get_object()
+        if notification.user == request.user:
+            notification.is_read = True
+            notification.save()
+            return Response({'status': 'marked as read'})
+        return Response({'error': 'Permission denied'}, status=status.HTTP_403_FORBIDDEN)
+
+# ---------------- ValidationHistoryViewSet ----------------
+class ValidationHistoryViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ValidationHistory.objects.all()
+    serializer_class = ValidationHistorySerializer
+
+    def get_queryset(self):
+        queryset = ValidationHistory.objects.all()
+        validation_result = self.request.query_params.get('result', None)
+        patient_id = self.request.query_params.get('patient', None)
+
+        if validation_result:
+            queryset = queryset.filter(validation_result=validation_result)
+        if patient_id:
+            queryset = queryset.filter(patient_id=patient_id)
+
+        return queryset
+
+    @action(detail=False, methods=['get'])
+    def summary(self, request):
+        """Get validation summary statistics"""
+        total_validations = ValidationHistory.objects.count()
+        approved_count = ValidationHistory.objects.filter(validation_result='approved').count()
+        rejected_count = ValidationHistory.objects.filter(validation_result='rejected').count()
+
+        return Response({
+            'total_validations': total_validations,
+            'approved_count': approved_count,
+            'rejected_count': rejected_count,
+            'approval_rate': (approved_count / total_validations * 100) if total_validations > 0 else 0
+        })

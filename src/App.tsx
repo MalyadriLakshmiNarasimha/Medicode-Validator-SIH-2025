@@ -9,11 +9,8 @@ import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
 import Analytics from './pages/Analytics';
 import Admin from './pages/Admin';
-<<<<<<< HEAD
 import AdminTreatmentApproval from './pages/AdminTreatmentApproval_fixed';
 import PatientDetails from './pages/PatientDetails_new';
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -57,7 +54,6 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-<<<<<<< HEAD
           path="/patient/:patientId"
           element={
             <ProtectedRoute>
@@ -66,8 +62,6 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
           path="/reports"
           element={
             <ProtectedRoute>
@@ -93,7 +87,6 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-<<<<<<< HEAD
         <Route
           path="/admin/treatments"
           element={
@@ -104,8 +97,6 @@ const AppContent: React.FC = () => {
             </ProtectedRoute>
           }
         />
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>

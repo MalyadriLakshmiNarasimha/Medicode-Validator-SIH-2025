@@ -1,10 +1,25 @@
 from rest_framework import serializers
-from .models import User, Patient, Diagnosis, Treatment, Report
+from .models import User, Patient, Diagnosis, Treatment, Report, MedicalCode, Notification, ValidationHistory
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'role']
+
+class MedicalCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalCode
+        fields = '__all__'
+
+class NotificationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Notification
+        fields = '__all__'
+
+class ValidationHistorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ValidationHistory
+        fields = '__all__'
 
 class DiagnosisSerializer(serializers.ModelSerializer):
     patient = serializers.PrimaryKeyRelatedField(queryset=Patient.objects.all())

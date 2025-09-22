@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-<<<<<<< HEAD
 import { Link } from 'react-router-dom';
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 import { 
   Plus, 
   Search, 
@@ -11,7 +8,6 @@ import {
   Users, 
   CheckCircle, 
   XCircle, 
-<<<<<<< HEAD
   Clock,
   Calendar
 } from 'lucide-react';
@@ -20,22 +16,10 @@ import { Patient } from '../types';
 import StatusBadge from '../components/Common/StatusBadge';
 import { format } from 'date-fns';
 import AddPatientModal from '../components/Dashboard/AddPatientModal';
-=======
-  AlertTriangle,
-  Calendar,
-  TrendingUp,
-  Clock
-} from 'lucide-react';
-import { mockPatients } from '../data/mockData';
-import { Patient } from '../types';
-import ValidationBadge from '../components/Common/ValidationBadge';
-import { format } from 'date-fns';
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
 
 const Dashboard: React.FC = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-<<<<<<< HEAD
   const [statusFilter, setStatusFilter] = useState('all');
   const [codeSystemFilter, setCodeSystemFilter] = useState('all');
   const [isLoading, setIsLoading] = useState(true);
@@ -48,7 +32,6 @@ const Dashboard: React.FC = () => {
         const response = await fetch('http://localhost:8000/api/patients/');
         if (response.ok) {
           const data = await response.json();
-          // Map snake_case to camelCase and ensure proper data structure
           const mappedData = data.map((patient: any) => ({
             id: patient.id,
             name: patient.name,
@@ -61,15 +44,11 @@ const Dashboard: React.FC = () => {
           }));
           setPatients(mappedData);
         } else {
-          console.error('Failed to fetch patients');
-          // Fallback to mock data if API fails
-          const { mockPatients } = await import('../data/mockData');
+          console.error('Failed to fetch patients, using mock data');
           setPatients(mockPatients);
         }
       } catch (error) {
         console.error('Error fetching patients:', error);
-        // Fallback to mock data if API fails
-        const { mockPatients } = await import('../data/mockData');
         setPatients(mockPatients);
       } finally {
         setIsLoading(false);
@@ -79,21 +58,18 @@ const Dashboard: React.FC = () => {
   }, []);
 
   const handleAddPatient = (newPatient: Patient) => {
-    setPatients(prevPatients => [newPatient, ...prevPatients]);
+    setPatients(prev => [newPatient, ...prev]);
   };
 
   const filteredPatients = patients.filter(patient => {
-    // Search functionality
     const matchesSearch = searchTerm === '' ||
-                         patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         patient.patientId.toLowerCase().includes(searchTerm.toLowerCase());
+      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.patientId.toLowerCase().includes(searchTerm.toLowerCase());
 
-    // Status filter
     const matchesStatus = statusFilter === 'all' ||
       patient.diagnoses.some(d => d.status === statusFilter) ||
       patient.treatments.some(t => t.status === statusFilter);
 
-    // Code system filter
     const matchesCodeSystem = codeSystemFilter === 'all' ||
       patient.diagnoses.some(d => d.codeSystem === codeSystemFilter) ||
       patient.treatments.some(t => t.codeSystem === codeSystemFilter);
@@ -101,14 +77,6 @@ const Dashboard: React.FC = () => {
     return matchesSearch && matchesStatus && matchesCodeSystem;
   });
 
-  // Debug logging
-  console.log('Total patients:', patients.length);
-  console.log('Search term:', searchTerm);
-  console.log('Filtered patients:', filteredPatients.length);
-  console.log('Status filter:', statusFilter);
-  console.log('Code system filter:', codeSystemFilter);
-
-  // Sort filtered patients by lastVisit descending to show recent patients first
   filteredPatients.sort((a, b) => new Date(b.lastVisit).getTime() - new Date(a.lastVisit).getTime());
 
   const stats = {
@@ -122,36 +90,6 @@ const Dashboard: React.FC = () => {
     pendingCodes: patients.reduce((acc, patient) => 
       acc + patient.diagnoses.filter(d => d.status === 'pending').length + 
       patient.treatments.filter(t => t.status === 'pending').length, 0)
-=======
-  const [filterRole, setFilterRole] = useState('all');
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setPatients(mockPatients);
-      setIsLoading(false);
-    }, 1000);
-  }, []);
-
-  const filteredPatients = patients.filter(patient => {
-    const matchesSearch = patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         patient.patientId.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
-
-  const stats = {
-    totalPatients: patients.length,
-    validCodes: patients.reduce((acc, patient) => 
-      acc + patient.diagnoses.filter(d => d.isValid).length + 
-      patient.treatments.filter(t => t.isValid).length, 0),
-    invalidCodes: patients.reduce((acc, patient) => 
-      acc + patient.diagnoses.filter(d => !d.isValid).length + 
-      patient.treatments.filter(t => !t.isValid).length, 0),
-    recentValidations: patients.filter(patient => 
-      new Date(patient.lastVisit) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-    ).length
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
   };
 
   return (
@@ -163,13 +101,9 @@ const Dashboard: React.FC = () => {
             <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
             <p className="text-gray-600 mt-2">Monitor and validate medical codes across your patients</p>
           </div>
-<<<<<<< HEAD
           <button 
             onClick={() => setIsModalOpen(true)}
             className="mt-4 lg:mt-0 bg-medical-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-medical-blue-700 transition-colors flex items-center space-x-2">
-=======
-          <button className="mt-4 lg:mt-0 bg-medical-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-medical-blue-700 transition-colors flex items-center space-x-2">
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
             <Plus className="h-5 w-5" />
             <span>Add New Patient</span>
           </button>
@@ -202,13 +136,8 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Approved Codes</p>
                 <p className="text-3xl font-bold text-medical-green-600">{stats.approvedCodes}</p>
-=======
-                <p className="text-gray-500 text-sm">Valid Codes</p>
-                <p className="text-3xl font-bold text-medical-green-600">{stats.validCodes}</p>
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
               <div className="w-12 h-12 bg-medical-green-100 rounded-lg flex items-center justify-center">
                 <CheckCircle className="h-6 w-6 text-medical-green-600" />
@@ -224,13 +153,8 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Rejected Codes</p>
                 <p className="text-3xl font-bold text-red-500">{stats.rejectedCodes}</p>
-=======
-                <p className="text-gray-500 text-sm">Invalid Codes</p>
-                <p className="text-3xl font-bold text-red-500">{stats.invalidCodes}</p>
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
                 <XCircle className="h-6 w-6 text-red-500" />
@@ -246,19 +170,11 @@ const Dashboard: React.FC = () => {
           >
             <div className="flex items-center justify-between">
               <div>
-<<<<<<< HEAD
                 <p className="text-gray-500 text-sm">Pending Review</p>
                 <p className="text-3xl font-bold text-orange-500">{stats.pendingCodes}</p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
                 <Clock className="h-6 w-6 text-orange-600" />
-=======
-                <p className="text-gray-500 text-sm">This Week</p>
-                <p className="text-3xl font-bold text-blue-600">{stats.recentValidations}</p>
-              </div>
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="h-6 w-6 text-blue-600" />
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
               </div>
             </div>
           </motion.div>
@@ -277,7 +193,6 @@ const Dashboard: React.FC = () => {
                 className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-blue-500 focus:border-transparent"
               />
             </div>
-<<<<<<< HEAD
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -300,7 +215,6 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Filter Dropdowns */}
           {showFilters && (
             <div className="mt-4 pt-4 border-t border-gray-200">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -332,13 +246,6 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
           )}
-=======
-            <button className="flex items-center space-x-2 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-              <Filter className="h-5 w-5 text-gray-400" />
-              <span>Filters</span>
-            </button>
-          </div>
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
         </div>
 
         {/* Patients Table */}
@@ -392,20 +299,10 @@ const Dashboard: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-1">
-                          {patient.diagnoses.slice(0, 2).map((diagnosis) => (
-                            <div key={diagnosis.id} className="flex items-center space-x-2">
-<<<<<<< HEAD
-                              <StatusBadge status={diagnosis.status} />
-=======
-                              <ValidationBadge 
-                                isValid={diagnosis.isValid} 
-                                codeSystem={diagnosis.codeSystem}
-                                showTooltip={false}
-                              />
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
-                              <span className="text-sm text-gray-600 truncate">
-                                {diagnosis.code}
-                              </span>
+                          {patient.diagnoses.slice(0, 2).map(d => (
+                            <div key={d.id} className="flex items-center space-x-2">
+                              <StatusBadge status={d.status} />
+                              <span className="text-sm text-gray-600 truncate">{d.code}</span>
                             </div>
                           ))}
                           {patient.diagnoses.length > 2 && (
@@ -417,20 +314,10 @@ const Dashboard: React.FC = () => {
                       </td>
                       <td className="px-6 py-4">
                         <div className="space-y-1">
-                          {patient.treatments.slice(0, 2).map((treatment) => (
-                            <div key={treatment.id} className="flex items-center space-x-2">
-<<<<<<< HEAD
-                              <StatusBadge status={treatment.status} />
-=======
-                              <ValidationBadge 
-                                isValid={treatment.isValid} 
-                                codeSystem={treatment.codeSystem}
-                                showTooltip={false}
-                              />
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
-                              <span className="text-sm text-gray-600 truncate">
-                                {treatment.code}
-                              </span>
+                          {patient.treatments.slice(0, 2).map(t => (
+                            <div key={t.id} className="flex items-center space-x-2">
+                              <StatusBadge status={t.status} />
+                              <span className="text-sm text-gray-600 truncate">{t.code}</span>
                             </div>
                           ))}
                           {patient.treatments.length > 2 && (
@@ -444,24 +331,14 @@ const Dashboard: React.FC = () => {
                         <div className="flex items-center space-x-1">
                           <Calendar className="h-4 w-4 text-gray-400" />
                           <span className="text-sm text-gray-500">
-<<<<<<< HEAD
-                          {patient.lastVisit ? (isNaN(new Date(patient.lastVisit).getTime()) ? 'N/A' : format(new Date(patient.lastVisit), 'MMM dd, yyyy')) : 'N/A'}
-=======
-                            {format(new Date(patient.lastVisit), 'MMM dd, yyyy')}
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
+                            {patient.lastVisit ? (isNaN(new Date(patient.lastVisit).getTime()) ? 'N/A' : format(new Date(patient.lastVisit), 'MMM dd, yyyy')) : 'N/A'}
                           </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-<<<<<<< HEAD
                         <Link to={`/patient/${patient.id}`} className="text-medical-blue-600 hover:text-medical-blue-700">
                           View Details
                         </Link>
-=======
-                        <button className="text-medical-blue-600 hover:text-medical-blue-700">
-                          View Details
-                        </button>
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
                       </td>
                     </motion.tr>
                   ))}
@@ -471,14 +348,13 @@ const Dashboard: React.FC = () => {
           )}
         </div>
       </div>
-<<<<<<< HEAD
+
+      {/* Add Patient Modal */}
       <AddPatientModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onAdd={handleAddPatient}
       />
-=======
->>>>>>> 381f102573c856ffde4565c56d7a5cd1167e0c48
     </div>
   );
 };

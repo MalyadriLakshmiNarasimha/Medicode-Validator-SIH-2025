@@ -1,36 +1,23 @@
-# Fix "Failed to add code" Error - Implementation Plan
+# Medical Code Auto-Validation System Implementation
 
-## Current Issue
-The `handleAddCode` function in PatientDetails.tsx only updates local state without making API calls, causing data loss on page refresh.
+## Backend Implementation
+- [x] Create MedicalCode model for master dataset
+- [x] Create Notification model for rejected codes
+- [x] Create ValidationHistory model for tracking
+- [x] Update serializers for new models
+- [x] Add validation logic to views
+- [x] Create management command to populate master codes
+- [x] Update URLs for new endpoints
+- [x] Run database migrations
 
-## Implementation Steps
+## Frontend Implementation
+- [ ] Update submission forms to show real-time validation
+- [ ] Add notification display components
+- [ ] Update dashboard to show validation status
+- [ ] Add validation history view for admins
 
-### Step 1: Fix handleAddCode function
-- [ ] Replace local state update with proper API calls using patientApi.addDiagnosis() and patientApi.addTreatment()
-- [ ] Add proper error handling with user-friendly error messages
-- [ ] Add loading states during API operations
-
-### Step 2: Add loading states and error handling
-- [ ] Add loading state for add operations
-- [ ] Display proper error messages to users
-- [ ] Show success feedback when codes are added successfully
-
-### Step 3: Update AddCodeModal component
-- [ ] Add loading state to the submit button
-- [ ] Disable form during submission
-- [ ] Show appropriate feedback messages
-
-### Step 4: Testing
-- [ ] Verify API calls are made correctly
-- [ ] Confirm data persistence to backend
-- [ ] Test error scenarios and user feedback
-
-## Files to be modified:
-- `src/pages/PatientDetails.tsx` - Main fix for handleAddCode function
-- `src/utils/api.ts` - Already has required API functions
-
-## Expected Outcome:
-- Diagnoses and treatments will be properly saved to backend
-- Users will see appropriate feedback during operations
-- Data will persist after page refresh
-- Error messages will be user-friendly
+## Testing
+- [ ] Test automatic validation logic
+- [ ] Test notification system
+- [ ] Test frontend integration
+- [ ] Test admin review functionality
