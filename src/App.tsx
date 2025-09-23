@@ -11,6 +11,7 @@ import Analytics from './pages/Analytics';
 import Admin from './pages/Admin';
 import AdminTreatmentApproval from './pages/AdminTreatmentApproval_fixed';
 import PatientDetails from './pages/PatientDetails_new';
+import RejectedCodes from './pages/RejectedCodes';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, isLoading } = useAuth();
@@ -93,6 +94,16 @@ const AppContent: React.FC = () => {
             <ProtectedRoute>
               <AdminRoute>
                 <AdminTreatmentApproval />
+              </AdminRoute>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/rejected-codes"
+          element={
+            <ProtectedRoute>
+              <AdminRoute>
+                <RejectedCodes />
               </AdminRoute>
             </ProtectedRoute>
           }

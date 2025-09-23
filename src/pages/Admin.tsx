@@ -24,6 +24,7 @@ const Admin: React.FC = () => {
   const tabs = [
     { id: 'users', label: 'User Management', icon: Users },
     { id: 'treatments', label: 'Treatment Approval', icon: CheckCircle },
+    { id: 'rejected-codes', label: 'Rejected Codes', icon: Shield },
     { id: 'roles', label: 'Roles & Permissions', icon: Shield },
     { id: 'datasets', label: 'Code Datasets', icon: Database },
     { id: 'system', label: 'System Settings', icon: Settings }
@@ -225,6 +226,170 @@ const Admin: React.FC = () => {
     </div>
   );
 
+  const renderRejectedCodes = () => {
+    // Mock rejected codes data - in real app, this would come from API
+    const rejectedCodes = [
+      {
+        id: 1,
+        submittedCode: 'XYZ999',
+        codeSystem: 'ICD-11',
+        patientName: 'John Doe',
+        doctorName: 'Dr. Sarah Johnson',
+        rejectionReason: 'Code not found in master dataset. Did you mean: 1A00, BA00?',
+        submittedAt: '2025-01-15T10:30:00Z',
+        isRead: false
+      },
+      {
+        id: 2,
+        submittedCode: 'INVALID123',
+        codeSystem: 'CPT',
+        patientName: 'Jane Smith',
+        doctorName: 'Dr. Rajesh Kumar',
+        rejectionReason: 'Code not found in master dataset. Did you mean: 99213, 99214?',
+        submittedAt: '2025-01-15T09:15:00Z',
+        isRead: false
+      },
+      {
+        id: 3,
+        submittedCode: 'TEST456',
+        codeSystem: 'ICD-11',
+        patientName: 'Bob Wilson',
+        doctorName: 'Dr. Priya Sharma',
+        rejectionReason: 'Code not found in master dataset. Did you mean: 5A11, 5A10?',
+        submittedAt: '2025-01-15T08:45:00Z',
+        isRead: true
+      },
+      {
+        id: 4,
+        submittedCode: 'WRONG789',
+        codeSystem: 'HCPCS',
+        patientName: 'Alice Brown',
+        doctorName: 'Dr. Michael Chen',
+        rejectionReason: 'Code not found in master dataset. Did you mean: J3420, G0008?',
+        submittedAt: '2025-01-14T16:20:00Z',
+        isRead: true
+      }
+    ];
+
+    return (
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Rejected Codes Notifications</h3>
+            <p className="text-gray-600">Monitor and review all rejected medical codes</p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+              <Filter className="h-4 w-4 text-gray-400" />
+              <span>Filter</span>
+            </button>
+            <button className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors">
+              Export Report
+            </button>
+          </div>
+        </div>
+
+        {/* Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Total Rejected</p>
+                <p className="text-2xl font-bold text-red-600">{rejectedCodes.length}</p>
+              </div>
+              <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                <Shield className="h-6 w-6 text-red-600" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Unread</p>
+                <p className="text-2xl font-bold text-orange-600">
+                  {rejectedCodes.filter(code => !code.isRead).length}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                <Eye className="h-6 w-6 text-orange-600" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">This Week</p>
+                <p className="text-2xl font-bold text-blue-600">12</p>
+              </div>
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <Database className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white rounded-xl shadow-sm p-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Unique Doctors</p>
+                <p className="text-2xl font-bold text-green-600">
+                  {new Set(rejectedCodes.map(code => code.doctorName)).size}
+                </p>
+              </div>
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <Users className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Notifications List */}
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+          <div className="p-6 border-b border-gray-200">
+            <h4 className="text-lg font-semibold text-gray-900">Recent Rejections</h4>
+          </div>
+          <div className="divide-y divide-gray-200">
+            {rejectedCodes.map((code) => (
+              <div
+                key={code.id}
+                className={`p-6 hover:bg-gray-50 transition-colors ${
+                  !code.isRead ? 'bg-red-50 border-l-4 border-l-red-500' : ''
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-3 mb-2">
+                      <div className={`w-2 h-2 rounded-full ${!code.isRead ? 'bg-red-500' : 'bg-gray-300'}`}></div>
+                      <span className="text-sm font-medium text-gray-900">
+                        {code.submittedCode} ({code.codeSystem})
+                      </span>
+                      <span className="px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                        Rejected
+                      </span>
+                    </div>
+                    <p className="text-sm text-gray-600 mb-2">{code.rejectionReason}</p>
+                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                      <span>Patient: {code.patientName}</span>
+                      <span>Doctor: {code.doctorName}</span>
+                      <span>Submitted: {new Date(code.submittedAt).toLocaleString()}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <Eye className="h-4 w-4" />
+                    </button>
+                    <button className="text-gray-400 hover:text-gray-600">
+                      <MoreHorizontal className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -273,6 +438,20 @@ const Admin: React.FC = () => {
               >
                 <CheckCircle className="h-5 w-5" />
                 <span>Go to Treatment Approval</span>
+              </a>
+            </div>
+          )}
+          {activeTab === 'rejected-codes' && (
+            <div className="bg-white rounded-xl shadow-sm p-8 text-center">
+              <Shield className="h-16 w-16 text-red-600 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Rejected Codes Management</h3>
+              <p className="text-gray-600 mb-6">Monitor and review all rejected medical codes with detailed information and analytics</p>
+              <a
+                href="/admin/rejected-codes"
+                className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors inline-flex items-center space-x-2"
+              >
+                <Shield className="h-5 w-5" />
+                <span>Go to Rejected Codes</span>
               </a>
             </div>
           )}

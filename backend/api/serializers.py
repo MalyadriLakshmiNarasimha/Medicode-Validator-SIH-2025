@@ -17,6 +17,10 @@ class NotificationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ValidationHistorySerializer(serializers.ModelSerializer):
+    patient_name = serializers.CharField(source='patient.name', read_only=True)
+    patient_id = serializers.CharField(source='patient.patient_id', read_only=True)
+    doctor_name = serializers.CharField(source='validated_by', read_only=True)
+
     class Meta:
         model = ValidationHistory
         fields = '__all__'

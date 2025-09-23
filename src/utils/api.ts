@@ -117,3 +117,11 @@ export const reportApi = {
   getById: (id: string) => apiClient.get(`/reports/${id}/`),
   delete: (id: string) => apiClient.delete(`/reports/${id}/`),
 };
+
+// Validation History API functions
+export const validationHistoryApi = {
+  getAll: () => apiClient.get('/validation-history/'),
+  getRejected: () => apiClient.get('/validation-history/?result=rejected'),
+  getById: (id: string) => apiClient.get(`/validation-history/${id}/`),
+  getSummary: () => apiClient.get('/validation-history/summary/'),
+};
